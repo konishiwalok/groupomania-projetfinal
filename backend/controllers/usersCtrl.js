@@ -1,7 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 const db = require("../models/index");
 const User = db.user;
+const Post = db.post;
 require("dotenv").config();
 
 const asyncLib = require("async");
@@ -347,17 +349,42 @@ exports.delete = (req, res, next) => {
     [
       //Vérifie si la demande est envoyée par un utilisateur enregistré
       function (done) {
+        Post.findAll({
+          where : { userId: req.body.userId },
+        })
+  
+      .then ( function (postFound) {
+        const arrayGrande = Object.values(postFound);
+        arrayGrande.forEach( x => {
+          const urlImagen = x.dataValues.imageUrl;
+          const datos = urlImagen.split('/'); // separation url d'un array 
+          const filename = datos[datos.length - 1];//extarction le nom de l'image et on le supprime
+          fs.unlink(`images/${filename}`, () => {
+                console.log("image supprime");
+              });
+        });
+
+      }),
         User.findOne({
           // on utilise la methode findone pour preciser l'utilisateur + where : on va presiser qu on vet recuperer de l'user id preciser dans le token
           where: { id: req.body.userId },
         })
           .then(function (userFound) {
+
+            const urlImagen = Object.values(userFound)[0].imageUrl;// extraction d' urlImagen
+            const datos = urlImagen.split('/'); // separation url d'un array 
+            const filename = datos[datos.length - 1];//extarction le nom de l'image et on le supprime
+            fs.unlink(`images/${filename}`, () => {
+              console.log("image supprime");
+            });
+
             done(null, userFound); // on passe au function suivante
           })
           .catch(function (err) {
             return res.status(500).json({ error: "unable to verify user" });
           });
       },
+      
 
       function (userFound, done) {
         //condition pour verifier si l'utilisateur est le proprietaire du profil , ou si administrateur est true on pourra supprimir avec la methode destroy grace a where

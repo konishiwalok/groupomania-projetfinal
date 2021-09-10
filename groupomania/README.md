@@ -4,9 +4,6 @@ welcome to the projet 7
 in which we will create a social network for our company called Groupomania 
 
 you ll need to clone the :
-backend: https://github.com/konishiwalok/Groupmania-social
-and then the 
-frontend : https://github.com/konishiwalok/Groupomania-frontend
 
 and make them run at the same time ...
 for this projet you ll need to have NODE.JS ,MYSQL ,SEQUELIZE ,VUE
@@ -16,7 +13,8 @@ INSTRUCTIONS 😊
 
 🖐️- install the Frontend
 
-you have to clone my projet from github : https://github.com/konishiwalok/Groupomania-frontend
+you have to clone my projet from github 
+https://github.com/konishiwalok/groupomania-projetfinal
 
 to start you need to open an terminal and get inside the foldier groupomania 
 cd groupomania 

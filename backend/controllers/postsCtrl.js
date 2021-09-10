@@ -1,8 +1,10 @@
+const asyncLib = require("async");
+const fs = require('fs');
+const { post } = require("../models/index");
 const db = require("../models/index");
 const Post = db.post;
 const User = db.user;
 const Comment = db.comment;
-const asyncLib = require("async");
 const ITEMS_LIMIT = 50;
 
 //creating post POST
@@ -109,6 +111,8 @@ exports.findAll = (req, res) => {
 //DELETE POST-DELETE
 
 exports.deletePost = (req, res, next) => {
+
+
   asyncLib.waterfall(
     [
       //Vérifie si la demande est envoyée par un utilisateur enregistré
@@ -130,6 +134,14 @@ exports.deletePost = (req, res, next) => {
         })
           .then(function (postFound) {
             // on passe au function suivante
+           
+              const urlImagen = Object.values(postFound)[0].imageUrl;// extraction d' urlImagen
+              const datos = urlImagen.split('/'); // separation url d'un array 
+              const filename = datos[datos.length - 1];//extarction le nom de l'image et on le supprime
+              fs.unlink(`images/${filename}`, () => {
+                console.log("image supprime");
+              });
+        
             done(null, userFound, postFound);
           })
           .catch(function (err) {
